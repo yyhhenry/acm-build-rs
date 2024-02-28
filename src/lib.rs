@@ -39,12 +39,12 @@ pub fn build_data(
         let output_file = data_dir.join(format!("{}.out", id));
 
         if fixed_input_file.is_file() {
-            println!("Using fixed input file {}", fixed_input_file.display());
             std::fs::copy(&fixed_input_file, &input_file)?;
+            println!("Using fixed input file {}", fixed_input_file.display());
         } else {
             generator.generate(id, &mut std::fs::File::create(&input_file)?)?;
+            println!("Created input file {}", input_file.display());
         };
-        println!("Created input file {}", input_file.display());
 
         let std_input = std::fs::File::open(&input_file)?;
         let std_output = std::fs::File::create(&output_file)?;
