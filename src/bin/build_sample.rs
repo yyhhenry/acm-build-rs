@@ -21,5 +21,5 @@ fn main() -> Result<()> {
     let generator = Generator {
         rng: rand::SeedableRng::seed_from_u64(42),
     };
-    build_data("a", 1..=10, generator)
+    build_data("sample", 1..=10, generator)
 }
