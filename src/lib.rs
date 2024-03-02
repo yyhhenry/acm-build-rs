@@ -18,7 +18,8 @@ fn compile(std_exe: impl AsRef<Path>) -> Result<()> {
     }
     Ok(())
 }
-fn zip_data(data_dir: impl AsRef<Path>) -> Result<()> {
+fn zip_data(name: impl AsRef<str>, data_dir: impl AsRef<Path>) -> Result<()> {
+    let name = name.as_ref();
     let data_dir = data_dir.as_ref();
     let zip_file = data_dir.join("data.zip");
     if zip_file.is_file() {
@@ -27,7 +28,7 @@ fn zip_data(data_dir: impl AsRef<Path>) -> Result<()> {
     let packing = Command::new("7z")
         .current_dir(&data_dir)
         .arg("a")
-        .arg("data.zip")
+        .arg(format!("{}-data.zip", name))
         .arg("*.in")
         .arg("*.out")
         .status()?;
@@ -87,5 +88,5 @@ pub fn build_data(
         }
         println!("> Created output file");
     }
-    zip_data(&data_dir)
+    zip_data(name, &data_dir)
 }
