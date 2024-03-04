@@ -29,5 +29,29 @@ pub trait AcmRand: Rng {
         edges.shuffle(self);
         edges
     }
+
+    /// Used to generate multi-group data.
+    /// Higher cohesiveness will lead to more unbalanced groups that the first group will have more elements.
+    fn gen_groups(
+        &mut self,
+        num_groups: usize,
+        sum_groups: usize,
+        cohesiveness: f64,
+    ) -> Vec<usize> {
+        let mut groups = vec![1; num_groups];
+        assert!(
+            (0.0..=1.0).contains(&cohesiveness),
+            "Cohesiveness must be in [0, 1]."
+        );
+        for _ in 0..sum_groups - num_groups {
+            if self.gen_bool(cohesiveness) {
+                groups[0] += 1;
+            } else {
+                groups[self.gen_range(0..num_groups)] += 1;
+            }
+        }
+        for _ in 1..num_groups {}
+        groups
+    }
 }
 impl<T> AcmRand for T where T: Rng {}
