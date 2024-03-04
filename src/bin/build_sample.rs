@@ -1,4 +1,4 @@
-use acm_build::{acm_rand::AcmRand, build_data};
+use acm_build::{acm_rand::AcmRand, build_data, ACMDisplay};
 use anyhow::Result;
 use rand::Rng;
 use std::io::Write;
@@ -9,11 +9,8 @@ impl acm_build::Generator for Generator {
     fn generate(&mut self, _id: usize, file: &mut std::fs::File) -> Result<()> {
         let n = self.rng.gen_scale(40);
         writeln!(file, "{}", n)?;
-        let a = (0..n)
-            .map(|_| self.rng.gen_range(1..=20).to_string())
-            .collect::<Vec<_>>()
-            .join(" ");
-        writeln!(file, "{}", a)?;
+        let a: Vec<_> = (0..n).map(|_| self.rng.gen_range(1..=20)).collect();
+        writeln!(file, "{}", a.acm_display())?;
         Ok(())
     }
 }
