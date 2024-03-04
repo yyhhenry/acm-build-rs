@@ -1,12 +1,15 @@
 use acm_build::{acm_rand::AcmRand, build_data, ACMDisplay};
 use anyhow::Result;
 use rand::Rng;
-use std::io::Write;
+use std::{
+    fs::File,
+    io::{BufWriter, Write},
+};
 struct Generator {
     rng: rand::rngs::StdRng,
 }
 impl acm_build::Generator for Generator {
-    fn generate(&mut self, _id: usize, file: &mut std::fs::File) -> Result<()> {
+    fn generate(&mut self, _id: usize, file: &mut BufWriter<File>) -> Result<()> {
         let n = self.rng.gen_scale(40);
         writeln!(file, "{}", n)?;
         let a: Vec<_> = (0..n).map(|_| self.rng.gen_range(1..=20)).collect();

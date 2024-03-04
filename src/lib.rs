@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use std::{fmt::Display, path::Path, process::Command};
+use std::{fmt::Display, fs::File, io::BufWriter, path::Path, process::Command};
 pub mod acm_rand;
 
 fn compile(std_exe: impl AsRef<Path>) -> Result<()> {
@@ -46,7 +46,7 @@ fn ensure_empty_dir(dir: impl AsRef<Path>) -> Result<()> {
     Ok(())
 }
 pub trait Generator {
-    fn generate(&mut self, id: usize, file: &mut std::fs::File) -> Result<()>;
+    fn generate(&mut self, id: usize, file: &mut BufWriter<File>) -> Result<()>;
 }
 pub fn build_data(
     name: impl AsRef<str>,
@@ -72,7 +72,9 @@ pub fn build_data(
             std::fs::copy(&fixed_input_file, &input_file)?;
             println!("> Using fixed input file");
         } else {
-            generator.generate(id, &mut std::fs::File::create(&input_file)?)?;
+            let file = std::fs::File::create(&input_file)?;
+            let mut buf_writer = std::io::BufWriter::new(file);
+            generator.generate(id, &mut buf_writer)?;
             println!("> Created input file");
         };
 
