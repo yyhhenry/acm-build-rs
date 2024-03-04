@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Result};
-use std::{path::Path, process::Command};
+use std::{fmt::Display, path::Path, process::Command};
 pub mod acm_rand;
 
 fn compile(std_exe: impl AsRef<Path>) -> Result<()> {
@@ -89,4 +89,19 @@ pub fn build_data(
         println!("> Created output file");
     }
     zip_data(name, &data_dir)
+}
+
+pub trait ACMDisplay {
+    fn acm_display(&self) -> String;
+}
+impl<T> ACMDisplay for [T]
+where
+    T: Display,
+{
+    fn acm_display(&self) -> String {
+        self.iter()
+            .map(|x| x.to_string())
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
 }
