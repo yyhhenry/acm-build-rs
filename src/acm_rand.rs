@@ -34,7 +34,7 @@ pub trait AcmRand: Rng {
     /// Higher cohesiveness will lead to more unbalanced groups that the first group will have more elements.
     fn gen_groups(
         &mut self,
-        n: usize,
+        t: usize,
         sum: usize,
         lower_bound: usize,
         cohesiveness: f64,
@@ -43,16 +43,15 @@ pub trait AcmRand: Rng {
             (0.0..=1.0).contains(&cohesiveness),
             "Cohesiveness must be in [0, 1]."
         );
-        assert!(n * lower_bound <= sum, "Sum is too small.");
-        let mut groups = vec![lower_bound; n];
-        for _ in 0..sum - n * lower_bound {
+        assert!(t * lower_bound <= sum, "Sum is too small.");
+        let mut groups = vec![lower_bound; t];
+        for _ in 0..sum - t * lower_bound {
             if self.gen_bool(cohesiveness) {
                 groups[0] += 1;
             } else {
-                groups[self.gen_range(0..n)] += 1;
+                groups[self.gen_range(0..t)] += 1;
             }
         }
-        for _ in 1..n {}
         groups
     }
 }
