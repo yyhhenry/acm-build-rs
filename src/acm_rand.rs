@@ -24,7 +24,8 @@ pub trait AcmRand: Rng {
         perm.shuffle(self);
         let mut edges = Vec::new();
         for (i, &v) in perm.iter().enumerate().skip(1) {
-            edges.push((v, perm[self.gen_range((i - dis).max(0)..i)]));
+            let low = (i as isize - dis as isize).max(0) as usize;
+            edges.push((v, perm[self.gen_range(low..i)]));
         }
         edges.shuffle(self);
         edges
