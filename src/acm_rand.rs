@@ -30,6 +30,16 @@ pub trait AcmRand: Rng {
         edges
     }
 
+    /// Generate a random graph with n vertices, indexed from `0` to `n-1`, and m edges.
+    /// Duplicate edges are allowed.
+    fn gen_graph(&mut self, n: usize, m: usize) -> Vec<(usize, usize)> {
+        let mut edges = Vec::new();
+        for _ in 0..m {
+            edges.push(self.gen_distinct_pair(0..n));
+        }
+        edges
+    }
+
     /// Used to generate multi-group data.
     /// Higher cohesiveness will lead to more unbalanced groups that the first group will have more elements.
     fn gen_groups(
