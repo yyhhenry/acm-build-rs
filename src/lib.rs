@@ -31,6 +31,7 @@ fn zip_data(name: impl AsRef<str>, data_dir: impl AsRef<Path>) -> Result<()> {
         .arg(format!("{}-data.zip", name))
         .arg("*.in")
         .arg("*.out")
+        .arg("*.txt")
         .status()?;
     if !packing.success() {
         return Err(anyhow!("Failed to pack data"));
@@ -89,6 +90,10 @@ pub fn build_data(
             return Err(anyhow!("Failed to run {}", std_exe.display()));
         }
         println!("> Created output file");
+    }
+    let score_file = root_dir.join("score.txt");
+    if score_file.is_file() {
+        std::fs::copy(&score_file, data_dir.join("score.txt"))?;
     }
     zip_data(name, &data_dir)
 }
